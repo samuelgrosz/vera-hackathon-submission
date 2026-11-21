@@ -6,6 +6,7 @@
 
   <h1>Vera</h1>
   <p>Track 2 · Same Person or Not?</p>
+  <p><a href="https://samuelgrosz.co.uk/vera-hackathon-submission/">Vera website</a></p>
 </div>
 
 Vera checks whether a watchlist hit describes a bank’s customer. It clears a hit when the evidence establishes a different person or company, confirms matches the evidence supports, and gives analysts a reason and source records for cases that remain open.
