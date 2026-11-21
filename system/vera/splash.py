@@ -8,7 +8,7 @@ from typing import Any, Callable
 from . import term
 from .term import c
 
-# The V mark. Each row is drawn in one step of the violet gradient.
+# The V mark. Each row is drawn in one step of the teal gradient.
 V_MARK = (
     "██╗   ██╗",
     "██║   ██║",
@@ -39,7 +39,7 @@ def logo_lines(indent: int = 4) -> list[str]:
 
 
 def small_logo() -> str:
-    return c("▼", "violet", "bold") + " " + c("VERA", "bold")
+    return c("▼", "teal", "bold") + " " + c("VERA", "bold")
 
 
 def intro() -> None:
@@ -83,7 +83,7 @@ def run_with_spinner(fn: Callable[[], Any], status: Callable[[], str]) -> Any:
     while t.is_alive():
         msg = status()
         if term.INTERACTIVE:
-            frame = c(SPINNER[i % len(SPINNER)], "violet", "bold")
+            frame = c(SPINNER[i % len(SPINNER)], "teal", "bold")
             line = f"    {frame}  {msg}  {c(f'{time.time() - t0:4.1f}s', 'grey')}"
             term.write("\r\x1b[2K" + line)
         elif msg != last:
@@ -101,4 +101,4 @@ def run_with_spinner(fn: Callable[[], Any], status: Callable[[], str]) -> Any:
 def progress_bar(done: int, total: int, width: int = 24) -> str:
     frac = 0 if not total else done / total
     full = int(frac * width)
-    return c("█" * full, "violet") + c("░" * (width - full), "grey") + c(f" {done}/{total}", "grey")
+    return c("█" * full, "teal") + c("░" * (width - full), "grey") + c(f" {done}/{total}", "grey")

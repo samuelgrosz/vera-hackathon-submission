@@ -108,7 +108,7 @@ def run_guide() -> None:
             body = (head + f"  {widgets.badge(decision)}  {c(code, 'bold')}\n\n"
                     + widgets.wrap(node.text) + "\n")
             if node.why:
-                body += "\n" + widgets.wrap(c("Next: ", "violet", "bold") + node.why) + "\n"
+                body += "\n" + widgets.wrap(c("Next: ", "teal", "bold") + node.why) + "\n"
             body += "\n" + c("  Your answers", "grey") + "\n" + _answers(path) + "\n\n"
             choice = widgets.select(body, ["Start again", "Back one step"])
             if choice == 0:
@@ -132,7 +132,7 @@ def _answers(path: list[str]) -> str:
     for here, nxt in zip(path, path[1:]):
         node = GUIDE[here]
         label = next(lbl for lbl, k in node.options if k == nxt)
-        lines.append(f"    {c('•', 'violet')} {node.text}  {c('→ ' + label, 'bold')}")
+        lines.append(f"    {c('•', 'teal')} {node.text}  {c('→ ' + label, 'bold')}")
     return "\n".join(lines) if lines else "    " + c("(none yet)", "grey")
 
 
@@ -140,7 +140,7 @@ def _answers(path: list[str]) -> str:
 
 STATUS = {
     "pass": ("✓", "green", "no conflict"),
-    "fired": ("◆", "violet", "decided it"),
+    "fired": ("◆", "teal", "decided it"),
     "unknown": ("?", "amber", "missing data"),
     "skip": ("·", "grey", "not needed"),
     "pending": ("○", "grey", "not evaluated yet"),

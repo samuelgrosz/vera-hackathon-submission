@@ -36,10 +36,10 @@ def tag(decision: str) -> str:
 
 def header_bar(title: str, crumbs: str = "") -> str:
     w = term.width()
-    left = c(" ▼ VERA ", "white", "bg_violet", "bold") + "  " + c(title, "bold")
+    left = c(" ▼ VERA ", "white", "bg_navy", "bold") + "  " + c(title, "bold")
     right = c(crumbs, "grey")
     gap = max(1, w - term.visible_len(left) - term.visible_len(right))
-    return left + " " * gap + right + "\n" + c("─" * w, "violet2") + "\n"
+    return left + " " * gap + right + "\n" + c("─" * w, "teal_dark") + "\n"
 
 
 def wrap(text: str, indent: int = 2, width: Optional[int] = None) -> str:
@@ -56,7 +56,7 @@ def kv(rows: list[tuple[str, str]], key_width: int = 18) -> str:
 
 
 def footer(hints: list[tuple[str, str]]) -> str:
-    parts = [c(k, "violet", "bold") + " " + c(v, "grey") for k, v in hints]
+    parts = [c(k, "teal", "bold") + " " + c(v, "grey") for k, v in hints]
     return "\n" + c("─" * term.width(), "grey") + "\n  " + "   ".join(parts) + "\n"
 
 
@@ -86,7 +86,7 @@ def _select_keys(header, items, actions, start, empty) -> Choice:
         for i in range(top, min(len(items), top + rows)):
             num = c(f"{i + 1:>2}", "grey") if len(items) > 1 else "  "
             if i == pos:
-                out.append(f" {c('›', 'violet', 'bold')}{num} {c(term.pad(items[i], 2), 'bold')}\n")
+                out.append(f" {c('›', 'teal', 'bold')}{num} {c(term.pad(items[i], 2), 'bold')}\n")
             else:
                 out.append(f"  {num} {items[i]}\n")
         if len(items) > rows:
@@ -129,12 +129,12 @@ def _select_lines(header, items, actions, start, empty) -> Choice:
         if not items:
             out.append("  " + c(empty, "grey") + "\n")
         for i, it in enumerate(items):
-            out.append(f"  {c(str(i + 1).rjust(3), 'violet')}  {it}\n")
-        legend = "   ".join(f"{c(k, 'violet')} {v}" for k, v in actions.items())
-        out.append("\n  " + (legend + "   " if legend else "") + f"{c('b', 'violet')} back   {c('q', 'violet')} quit\n")
+            out.append(f"  {c(str(i + 1).rjust(3), 'teal')}  {it}\n")
+        legend = "   ".join(f"{c(k, 'teal')} {v}" for k, v in actions.items())
+        out.append("\n  " + (legend + "   " if legend else "") + f"{c('b', 'teal')} back   {c('q', 'teal')} quit\n")
         term.clear()
         term.write("".join(out))
-        ans = term.read_line(c("  vera › ", "violet", "bold")).strip().lower()
+        ans = term.read_line(c("  vera › ", "teal", "bold")).strip().lower()
         if ans in ("q", "quit", "exit"):
             raise Quit
         if ans in ("b", "back"):
@@ -155,7 +155,7 @@ def pause(screen: str, hint: str = "any key to go back") -> None:
         if term.getkey() == "q":
             raise Quit
     else:
-        if term.read_line(c("  vera › ", "violet", "bold")).strip().lower() == "q":
+        if term.read_line(c("  vera › ", "teal", "bold")).strip().lower() == "q":
             raise Quit
 
 

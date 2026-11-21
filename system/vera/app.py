@@ -201,7 +201,7 @@ def practice_score(s: Session) -> str:
         right += truth == d.decision
     score = max(0.0, 1 - cost / base) if base else 0.0
     return (f"  {c('Practice labels', 'bold')}  ({len(labels)} hits)\n" + widgets.kv([
-        ("Decision score", c(f"{100 * score:.1f}", "violet", "bold") + c("  share of cost saved vs all-REVIEW", "grey")),
+        ("Decision score", c(f"{100 * score:.1f}", "teal", "bold") + c("  share of cost saved vs all-REVIEW", "grey")),
         ("Right decisions", f"{right} of {len(labels)}"),
         ("Unsafe clearances", c(str(unsafe), "red" if unsafe else "green", "bold")),
     ]))
@@ -281,7 +281,7 @@ def hit_screen(s: Session, hit_id: str) -> None:
         cat = h.get("primary_category") or (as_list(h.get("categories")) or ["?"])[0]
         countries = sorted({*as_list(h.get("countries")), *as_list(h.get("nationality")), *as_list(h.get("citizenship"))})
         lines = [widgets.header_bar(f"Hit {hit_id}", f"alert {d.alert_id}"), "",
-                 f"  {' ' * 18}{c(term.pad('CUSTOMER (as screened)', col), 'violet', 'bold')}{c('LISTED PROFILE', 'violet', 'bold')}",
+                 f"  {' ' * 18}{c(term.pad('CUSTOMER (as screened)', col), 'teal', 'bold')}{c('LISTED PROFILE', 'teal', 'bold')}",
                  row("Name", a.get("customer_name"), h.get("name")),
                  row("Aliases", "", "; ".join(as_list(h.get("aliases"))[:4])),
                  row("Type", a.get("entity_type"), h.get("entity_type")),
@@ -343,7 +343,7 @@ def email_screen(s: Session, d: Decision) -> None:
     while True:
         dr = drafts[i]
         label = "Internal: to the review team" if dr.kind == "internal" else "Customer: neutral details request"
-        body = "\n".join("  " + c("│ ", "violet") + line for line in dr.preview().splitlines())
+        body = "\n".join("  " + c("│ ", "teal") + line for line in dr.preview().splitlines())
         note = ("" if dr.kind == "internal" else
                 "\n\n" + widgets.wrap(c("Checked for tipping off: this draft mentions no screening, lists or matches.", "green")))
         head = (widgets.header_bar("Email drafts", f"{i + 1} of {len(drafts)}") + "\n  "
@@ -392,7 +392,7 @@ def search_screen(s: Session, h: dict) -> None:
              widgets.wrap(c("Most results are about other people with the same name. A result is about "
                             "this hit only if it describes the same kind of listing in a country tied to it.", "grey")), ""]
     for r in results[:12]:
-        lines.append(f"  {c(r.get('result_id', ''), 'violet')}  {c(r.get('title') or '', 'bold')}  {c(r.get('source') or '', 'grey')}")
+        lines.append(f"  {c(r.get('result_id', ''), 'teal')}  {c(r.get('title') or '', 'bold')}  {c(r.get('source') or '', 'grey')}")
         lines.append(widgets.wrap(r.get("snippet") or "", indent=4))
         lines.append("")
     if not results:
@@ -421,7 +421,7 @@ def help_screen(s: Session) -> None:
     keys = [("↑ ↓  or  j k", "move"), ("enter  or  →", "open"), ("1–9", "pick a numbered item"),
             ("esc  ←  backspace  b", "back"), ("t / e / d", "on a hit: tree, emails, decide"), ("q", "quit")]
     text = (widgets.header_bar("Help") + "\n  " + c("Keys", "bold") + "\n"
-            + "\n".join(f"    {c(k.ljust(24), 'violet')}{v}" for k, v in keys) + "\n\n  " + c("How Vera decides", "bold") + "\n"
+            + "\n".join(f"    {c(k.ljust(24), 'teal')}{v}" for k, v in keys) + "\n\n  " + c("How Vera decides", "bold") + "\n"
             + widgets.wrap("For each hit Vera first works out who the customer really is from the bank's systems, "
                            "then who the listed person really is, then compares them. It clears a hit only on a "
                            "contradiction (type, death, age, date of birth, verified name, location), confirms only "

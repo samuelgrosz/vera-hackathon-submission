@@ -43,17 +43,24 @@ _enable_windows_ansi()
 INTERACTIVE = (sys.stdin.isatty() and sys.stdout.isatty()
                and not os.environ.get("VERA_LINE_MODE"))
 COLOR = (sys.stdout.isatty() or bool(os.environ.get("FORCE_COLOR"))) and not os.environ.get("NO_COLOR")
+TRUECOLOR = os.environ.get("COLORTERM", "").lower() in {"truecolor", "24bit"}
 
-# Vera palette (256-colour ANSI). Violet is the brand colour.
+# The GitHub wordmark uses teal (#19C3A6) and navy (#13284F on dark backgrounds).
 STYLES = {
     "bold": "1", "dim": "2", "italic": "3", "under": "4", "inverse": "7",
-    "violet": "38;5;141", "violet2": "38;5;135", "lilac": "38;5;183",
+    "teal": "38;2;25;195;166" if TRUECOLOR else "38;5;43",
+    "teal_dark": "38;2;20;138;132" if TRUECOLOR else "38;5;30",
     "green": "38;5;114", "red": "38;5;210", "amber": "38;5;221",
     "blue": "38;5;111", "grey": "38;5;245", "white": "38;5;255",
-    "bg_violet": "48;5;55",
+    "bg_navy": "48;2;19;40;79" if TRUECOLOR else "48;5;17",
 }
 
-LOGO_GRADIENT = ("38;5;189", "38;5;183", "38;5;177", "38;5;141", "38;5;135", "38;5;99")
+LOGO_GRADIENT = (
+    "38;2;171;242;227", "38;2;126;230;208", "38;2;76;215;188",
+    STYLES["teal"], "38;2;22;168;150", STYLES["teal_dark"],
+) if TRUECOLOR else (
+    "38;5;159", "38;5;122", "38;5;79", STYLES["teal"], "38;5;36", STYLES["teal_dark"],
+)
 
 
 def c(text: str, *styles: str) -> str:
