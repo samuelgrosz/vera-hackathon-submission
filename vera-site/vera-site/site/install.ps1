@@ -1,5 +1,5 @@
 # Installs Vera on Windows (PowerShell).
-#   irm https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.ps1 | iex
+#   irm https://samuelgrosz.github.io/vera-hackathon-submission/install.ps1 | iex
 #
 # Optional settings (environment variables, set before running):
 #   $env:VERA_HOME = 'C:\some\folder'   where to put Vera (default: %USERPROFILE%\vera-cli)
@@ -7,7 +7,7 @@
 #   $env:VERA_NO_PATH = '1'             do not change your PATH
 $ErrorActionPreference = 'Stop'
 
-$Repo = if ($env:VERA_REPO) { $env:VERA_REPO } else { 'https://github.com/WalkerSimpson1/Dilligent-SpaceXSI.git' }
+$Repo = if ($env:VERA_REPO) { $env:VERA_REPO } else { 'https://github.com/samuelgrosz/vera-hackathon-submission.git' }
 $Dest = if ($env:VERA_HOME) { $env:VERA_HOME } else { Join-Path $env:USERPROFILE 'vera-cli' }
 
 function Fail([string]$Message) {
@@ -60,5 +60,5 @@ if (-not $env:VERA_NO_PATH) {
 
 Write-Host ''
 Write-Host 'Vera is installed.'
-Write-Host 'Run it now with:  vera'
+Write-Host 'Run it now with:  vera C:\path\to\screening\dev'
 Write-Host '(Other terminals that are already open need to be restarted first.)'

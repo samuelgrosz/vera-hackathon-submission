@@ -1,6 +1,6 @@
 #!/bin/sh
 # Installs Vera on macOS or Linux.
-#   curl -fsSL https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.sh | sh
+#   curl -fsSL https://samuelgrosz.github.io/vera-hackathon-submission/install.sh | sh
 #
 # Optional settings (environment variables):
 #   VERA_HOME=/some/folder   where to put Vera (default: ~/vera-cli)
@@ -8,7 +8,7 @@
 #   VERA_NO_PATH=1           do not edit your shell startup file
 set -eu
 
-REPO="${VERA_REPO:-https://github.com/WalkerSimpson1/Dilligent-SpaceXSI.git}"
+REPO="${VERA_REPO:-https://github.com/samuelgrosz/vera-hackathon-submission.git}"
 DEST="${VERA_HOME:-$HOME/vera-cli}"
 
 say() { printf '%s\n' "$*"; }
@@ -60,5 +60,5 @@ fi
 
 say ""
 say "Vera is installed."
-say "Open a new terminal and run:  vera"
-say "Or start it right now with:   $DEST/vera"
+say "Open a new terminal and run:  vera /path/to/screening/dev"
+say "Or start it right now with:   $DEST/vera /path/to/screening/dev"

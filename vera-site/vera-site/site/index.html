@@ -25,7 +25,7 @@
       <a href="#using">Using Vera</a>
       <a href="#decides">How it decides</a>
       <a href="#pipeline">Pipeline</a>
-      <a href="https://github.com/WalkerSimpson1/Dilligent-SpaceXSI" class="gh">GitHub</a>
+      <a href="https://github.com/samuelgrosz/vera-hackathon-submission" class="gh">GitHub</a>
     </nav>
   </header>
 
@@ -44,23 +44,23 @@
           </div>
 
           <div role="tabpanel" id="panel-unix" aria-labelledby="tab-unix" class="panel">
-            <div class="cmd"><pre><code data-copy data-url="install.sh" data-tpl="curl -fsSL {url} | sh">curl -fsSL https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
-            <p class="note">Downloads Vera to <code>~/vera-cli</code> and adds it to your PATH. Open a new terminal, then run <code>vera</code>.</p>
+            <div class="cmd"><pre><code data-copy data-url="install.sh" data-tpl="curl -fsSL {url} | sh">curl -fsSL https://samuelgrosz.github.io/vera-hackathon-submission/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+            <p class="note">Downloads Vera to <code>~/vera-cli</code> and adds it to your PATH. Open a new terminal, then run <code>vera /path/to/screening/dev</code>.</p>
           </div>
 
           <div role="tabpanel" id="panel-win" aria-labelledby="tab-win" class="panel" hidden>
-            <div class="cmd"><pre><code data-copy data-url="install.ps1" data-tpl="irm {url} | iex">irm https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.ps1 | iex</code></pre><button class="copy" type="button">Copy</button></div>
-            <p class="note">Run in PowerShell. Downloads Vera to <code>%USERPROFILE%\vera-cli</code> and adds it to your PATH. Then run <code>vera</code>.</p>
+            <div class="cmd"><pre><code data-copy data-url="install.ps1" data-tpl="irm {url} | iex">irm https://samuelgrosz.github.io/vera-hackathon-submission/install.ps1 | iex</code></pre><button class="copy" type="button">Copy</button></div>
+            <p class="note">Run in PowerShell. Downloads Vera to <code>%USERPROFILE%\vera-cli</code> and adds it to your PATH. Then run <code>vera C:\path\to\screening\dev</code>.</p>
           </div>
 
           <div role="tabpanel" id="panel-manual" aria-labelledby="tab-manual" class="panel" hidden>
-            <div class="cmd"><pre><code data-copy>git clone https://github.com/WalkerSimpson1/Dilligent-SpaceXSI.git
-cd Dilligent-SpaceXSI
-./vera</code></pre><button class="copy" type="button">Copy</button></div>
+            <div class="cmd"><pre><code data-copy>git clone https://github.com/samuelgrosz/vera-hackathon-submission.git
+cd vera-hackathon-submission
+./vera /path/to/screening/dev</code></pre><button class="copy" type="button">Copy</button></div>
             <p class="note">On Windows cmd or PowerShell, run <code>vera</code> instead of <code>./vera</code>.</p>
           </div>
 
-          <p class="req">Needs Git and Python 3.10 or later. Nothing else to install. <a href="install.sh">Read the installer first</a>.</p>
+          <p class="req">Needs Git and Python 3.10 or later. The organizer provides the screening data separately. <a href="install.sh">Read the installer first</a>.</p>
           <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
         </div>
       </div>
@@ -105,10 +105,9 @@ cd Dilligent-SpaceXSI
       <div class="wrap two">
         <div>
           <h2>Using Vera</h2>
-          <p>Vera is the command-line app on top of the screening system. Start it from anywhere once it is on your PATH:</p>
-          <pre class="plain"><code>vera            # Windows cmd or PowerShell
-./vera          # Git Bash, macOS, Linux, from the repo folder
-vera dev/       # point it at another data folder</code></pre>
+          <p>Vera is the command-line app on top of the screening system. Pass the data folder when you start Vera:</p>
+          <pre class="plain"><code>./vera /path/to/screening/dev  # macOS or Linux, from the repo folder
+vera C:\path\to\screening\dev  # Windows cmd or PowerShell</code></pre>
           <dl class="menu">
             <div><dt>Run Vera</dt><dd>Decides every hit and shows the summary, including the practice-label score and any unsafe clearances.</dd></div>
             <div><dt>Review queue</dt><dd>Open alerts, then an alert's hits, then a hit side by side with the customer. On a hit, <kbd>t</kbd> shows the decision tree, <kbd>e</kbd> drafts emails and <kbd>d</kbd> records your own decision.</dd></div>
@@ -186,7 +185,7 @@ vera dev/       # point it at another data folder</code></pre>
         </div>
         <ul class="facts">
           <li><strong>457 cleared</strong>, <strong>121 matched</strong> and <strong>241 sent to review</strong>, out of 819 hits.</li>
-          <li>Decided in about 75 seconds.</li>
+          <li>Decided offline in about 28 seconds.</li>
           <li>50 of 50 practice labels correct, with no unsafe clearances.</li>
           <li>Byte-identical output on rerun.</li>
         </ul>
@@ -207,7 +206,7 @@ python3 --version    # Windows: python --version</code></pre>
           <h3>Run on your own data</h3>
 <pre class="plain"><code>vera path/to/data</code></pre>
           <p>To run the graded pipeline directly, from the repo folder:</p>
-<pre class="plain"><code>system/run datasets output/dev.jsonl
+<pre class="plain"><code>system/run /path/to/screening/dev output/dev.jsonl
 python -m unittest discover -s tests -t .</code></pre>
         </div>
         <div>
@@ -230,7 +229,7 @@ git -C %USERPROFILE%\vera-cli pull</code></pre>
   <footer>
     <div class="wrap foot">
       <span>Built for the “Same Person or Not?” hackathon track. MIT License.</span>
-      <a href="https://github.com/WalkerSimpson1/Dilligent-SpaceXSI">Source on GitHub</a>
+      <a href="https://github.com/samuelgrosz/vera-hackathon-submission">Source on GitHub</a>
     </div>
   </footer>
 
