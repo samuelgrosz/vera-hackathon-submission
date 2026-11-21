@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vera: same person or not?</title>
+  <meta name="description" content="Vera is a command-line app that screens watchlist hits against your customers, clears obvious namesakes, and sends every real or uncertain match to a person with the records behind it.">
+  <meta name="theme-color" content="#0A1A3A">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="top">
+    <a class="brand" href="#top" aria-label="Vera, home">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0A1A3A"/><path d="M8 9.5 16 23 25 7.5" fill="none" stroke="#19C3A6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Vera</span>
+    </a>
+    <nav aria-label="Main">
+      <a href="#install">Install</a>
+      <a href="#using">Using Vera</a>
+      <a href="#decides">How it decides</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="https://github.com/WalkerSimpson1/Dilligent-SpaceXSI" class="gh">GitHub</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <!-- ───────────── Hero ───────────── -->
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <h1>Same person or not?</h1>
+        <p class="lede">A bank screens every customer against sanctions, politically exposed person and adverse-media lists, and most matches are just namesakes. Vera clears the obvious ones, keeps every real or uncertain match for a person, and shows the records behind each decision.</p>
+
+        <div class="install" id="install">
+          <div class="tabs" role="tablist" aria-label="Choose your system">
+            <button role="tab" id="tab-unix" aria-controls="panel-unix" aria-selected="true" tabindex="0">macOS and Linux</button>
+            <button role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" tabindex="-1">Windows</button>
+            <button role="tab" id="tab-manual" aria-controls="panel-manual" aria-selected="false" tabindex="-1">Manual</button>
+          </div>
+
+          <div role="tabpanel" id="panel-unix" aria-labelledby="tab-unix" class="panel">
+            <div class="cmd"><pre><code data-copy data-url="install.sh" data-tpl="curl -fsSL {url} | sh">curl -fsSL https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+            <p class="note">Downloads Vera to <code>~/vera-cli</code> and adds it to your PATH. Open a new terminal, then run <code>vera</code>.</p>
+          </div>
+
+          <div role="tabpanel" id="panel-win" aria-labelledby="tab-win" class="panel" hidden>
+            <div class="cmd"><pre><code data-copy data-url="install.ps1" data-tpl="irm {url} | iex">irm https://walkersimpson1.github.io/Dilligent-SpaceXSI/install.ps1 | iex</code></pre><button class="copy" type="button">Copy</button></div>
+            <p class="note">Run in PowerShell. Downloads Vera to <code>%USERPROFILE%\vera-cli</code> and adds it to your PATH. Then run <code>vera</code>.</p>
+          </div>
+
+          <div role="tabpanel" id="panel-manual" aria-labelledby="tab-manual" class="panel" hidden>
+            <div class="cmd"><pre><code data-copy>git clone https://github.com/WalkerSimpson1/Dilligent-SpaceXSI.git
+cd Dilligent-SpaceXSI
+./vera</code></pre><button class="copy" type="button">Copy</button></div>
+            <p class="note">On Windows cmd or PowerShell, run <code>vera</code> instead of <code>./vera</code>.</p>
+          </div>
+
+          <p class="req">Needs Git and Python 3.10 or later. Nothing else to install. <a href="install.sh">Read the installer first</a>.</p>
+          <p class="sr" id="copy-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- Interactive case file -->
+      <section class="case" aria-labelledby="case-title">
+        <div class="case-head">
+          <h2 id="case-title">Try a hit</h2>
+          <fieldset class="seg">
+            <legend class="sr">Choose an example</legend>
+            <input type="radio" name="case" id="c0" value="0" checked><label for="c0">Namesake</label>
+            <input type="radio" name="case" id="c1" value="1"><label for="c1">Same person</label>
+            <input type="radio" name="case" id="c2" value="2"><label for="c2">Missing data</label>
+          </fieldset>
+        </div>
+
+        <div class="sides">
+          <div class="side">
+            <h3>Your customer</h3>
+            <dl id="cust"></dl>
+          </div>
+          <div class="side">
+            <h3>Listed person</h3>
+            <dl id="hit"></dl>
+          </div>
+        </div>
+
+        <div class="verdict" id="verdict" data-tone="clear" aria-live="polite">
+          <div class="stamp"><strong id="v-title">Cleared</strong><span id="v-decision">DIFFERENT_ENTITY</span></div>
+          <div class="why">
+            <p><code id="v-code">DOB_MISMATCH</code></p>
+            <p id="v-reason"></p>
+            <p class="chips" id="v-evidence"></p>
+          </div>
+        </div>
+        <p class="caption">Invented example. Vera names the deciding fact and the records it came from.</p>
+      </section>
+    </section>
+
+    <!-- ───────────── Using Vera ───────────── -->
+    <section class="band" id="using">
+      <div class="wrap two">
+        <div>
+          <h2>Using Vera</h2>
+          <p>Vera is the command-line app on top of the screening system. Start it from anywhere once it is on your PATH:</p>
+          <pre class="plain"><code>vera            # Windows cmd or PowerShell
+./vera          # Git Bash, macOS, Linux, from the repo folder
+vera dev/       # point it at another data folder</code></pre>
+          <dl class="menu">
+            <div><dt>Run Vera</dt><dd>Decides every hit and shows the summary, including the practice-label score and any unsafe clearances.</dd></div>
+            <div><dt>Review queue</dt><dd>Open alerts, then an alert's hits, then a hit side by side with the customer. On a hit, <kbd>t</kbd> shows the decision tree, <kbd>e</kbd> drafts emails and <kbd>d</kbd> records your own decision.</dd></div>
+            <div><dt>Decision guide</dt><dd>An interactive yes/no walk through the identity rules.</dd></div>
+            <div><dt>Draft all emails</dt><dd>For every REVIEW hit: an internal draft and, where the customer can help, a neutral customer draft. Drafts are checked for tipping-off words and are never sent.</dd></div>
+          </dl>
+          <p class="small">Keys: <kbd>↑</kbd> <kbd>↓</kbd> move, <kbd>enter</kbd> open, <kbd>esc</kbd> or <kbd>←</kbd> back, <kbd>q</kbd> quit. Terminals that cannot read single keys get numbered menus. Vera never changes the graded output.</p>
+        </div>
+        <figure class="term" aria-label="Illustrative layout of the Vera main menu">
+          <div class="term-bar"><i></i><i></i><i></i><span>vera</span></div>
+<pre><code>  Vera  ·  Same person or not?
+
+<b class="sel">  ▸ Run Vera              </b>
+    Review queue
+    Decision guide
+    Draft all emails
+
+  ↑ ↓ move   enter open
+  esc back   q quit</code></pre>
+          <figcaption>Illustrative layout.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ───────────── How it decides ───────────── -->
+    <section class="wrap" id="decides">
+      <h2>How it decides</h2>
+      <div class="three">
+        <p class="d" data-tone="clear"><strong>Cleared</strong><code>DIFFERENT_ENTITY</code>A fact proves it is someone else.</p>
+        <p class="d" data-tone="match"><strong>Matched</strong><code>SAME_ENTITY</code>The facts show it is the customer. It goes to compliance.</p>
+        <p class="d" data-tone="review"><strong>Review</strong><code>REVIEW</code>The facts cannot settle it. An analyst decides.</p>
+      </div>
+
+      <div class="two top">
+        <div>
+          <h3>One rule behind every choice</h3>
+          <p>Wrongly clearing a sanctioned person is twenty times worse than an unneeded review. When the data is ambiguous, Vera picks the reading that cannot clear a hit. Anything that makes two people look more alike is safe to add; anything that makes them look different must be certain.</p>
+          <div class="costs" role="img" aria-label="Cost of mistakes: clearing a real match 60, sending a different person to review 3, sending a real match to review 2">
+            <div><span>Clearing a hit that is really the customer</span><i style="--w:100%"></i><b>60</b></div>
+            <div><span>Sending a different person to review</span><i style="--w:5%"></i><b>3</b></div>
+            <div><span>Sending a real match to review</span><i style="--w:3.4%"></i><b>2</b></div>
+          </div>
+        </div>
+        <div>
+          <h3>A hit is cleared only by a contradiction</h3>
+          <dl class="checks">
+            <div><dt>Time</dt><dd>The customer was 7 when the fraud report was written.</dd></div>
+            <div><dt>Date of birth</dt><dd>Customer born in 1988, hit born in 1952.</dd></div>
+            <div><dt>Location</dt><dd>Every country tied to the customer differs from every country tied to the hit.</dd></div>
+            <div><dt>Verified name</dt><dd>The passport name matches none of the hit's names.</dd></div>
+            <div><dt>Type</dt><dd>One is a person, the other a company.</dd></div>
+            <div><dt>Death</dt><dd>The listed person died before the customer was screened.</dd></div>
+          </dl>
+          <p>A hit is confirmed only when name and date of birth agree (name and country for a company) and nothing contradicts them. Missing information is never a mismatch: a birth year alone can still agree with a full date.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Pipeline ───────────── -->
+    <section class="band" id="pipeline">
+      <div class="wrap">
+        <h2>What happens to a hit</h2>
+        <ol class="steps">
+          <li><code>s1_load.py</code><span>Read the tables and check every alert's hit list.</span></li>
+          <li><code>s2_customers.py</code><span>Work out who the customer is: links, merged records, approved identity checks, notes.</span></li>
+          <li><code>s3_hit_facts.py</code><span>Read what the listing says: birth dates, countries, dated reports, death.</span></li>
+          <li><code>s4_decide.py</code><span>Apply the policy rules. Output a decision, reason code, reason and evidence.</span></li>
+          <li><code>s5_batch.py</code><span>Check every row, then write the output file in order.</span></li>
+        </ol>
+        <p class="small">Every fact carries the ID of the record it came from, so a decision can cite exactly what decided it. The pipeline is standard-library Python with fixed rules, so the same input gives the same output on every run. A row that fails its checks stops the run with an error instead of writing a partial file.</p>
+
+        <h3>Results on the development set</h3>
+        <div class="result" role="img" aria-label="819 hits: 457 cleared, 121 matched, 241 sent to review">
+          <i style="flex:457" data-tone="clear">457</i><i style="flex:121" data-tone="match">121</i><i style="flex:241" data-tone="review">241</i>
+        </div>
+        <ul class="facts">
+          <li><strong>457 cleared</strong>, <strong>121 matched</strong> and <strong>241 sent to review</strong>, out of 819 hits.</li>
+          <li>Decided in about 75 seconds.</li>
+          <li>50 of 50 practice labels correct, with no unsafe clearances.</li>
+          <li>Byte-identical output on rerun.</li>
+        </ul>
+        <p class="small">Figures are from the project README at the time of writing.</p>
+      </div>
+    </section>
+
+    <!-- ───────────── Setup details ───────────── -->
+    <section class="wrap" id="setup">
+      <h2>Install, update, remove</h2>
+      <div class="two top">
+        <div>
+          <h3>Check what you have</h3>
+<pre class="plain"><code>git --version
+python3 --version    # Windows: python --version</code></pre>
+          <p>You need Git and Python 3.10 or later.</p>
+
+          <h3>Run on your own data</h3>
+<pre class="plain"><code>vera path/to/data</code></pre>
+          <p>To run the graded pipeline directly, from the repo folder:</p>
+<pre class="plain"><code>system/run datasets output/dev.jsonl
+python -m unittest discover -s tests -t .</code></pre>
+        </div>
+        <div>
+          <h3>Update</h3>
+          <p>Run the installer again, or pull the latest version yourself:</p>
+<pre class="plain"><code>git -C ~/vera-cli pull
+# Windows
+git -C %USERPROFILE%\vera-cli pull</code></pre>
+
+          <h3>Remove</h3>
+          <p>Delete the <code>vera-cli</code> folder. Then take Vera off your PATH: on macOS and Linux delete the <code># Vera</code> lines in your shell startup file; on Windows remove the folder from the user <code>Path</code> variable in Environment Variables.</p>
+
+          <h3>Data and safety</h3>
+          <p>The development data comes from the event's participant data room and is for participants only; tests use invented names and dates. If a language model is used, it is called through OpenRouter with the key in <code>OPENROUTER_API_KEY</code>. Customer email drafts never mention screening, watchlists or sanctions, and nothing is ever sent.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>Built for the “Same Person or Not?” hackathon track. MIT License.</span>
+      <a href="https://github.com/WalkerSimpson1/Dilligent-SpaceXSI">Source on GitHub</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
