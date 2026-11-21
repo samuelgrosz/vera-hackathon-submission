@@ -11,6 +11,18 @@
 
 Vera checks whether a watchlist hit describes a bank’s customer. It clears a hit when the evidence establishes a different person or company, confirms matches the evidence supports, and gives analysts a reason and source records for cases that remain open.
 
+## Try the fictional test data
+
+The four cases from the demo use the same JSONL file layout as the organizer’s data. They include a clearance, a match, and two reviews in the default offline run.
+
+```sh
+./vera examples/vera-demo
+system/run examples/vera-demo output/demo.jsonl
+tools/score output/demo.jsonl examples/vera-demo/practice_labels.jsonl
+```
+
+The organizer provides the official development inputs separately.
+
 ## Run the evaluator
 
 ```sh
