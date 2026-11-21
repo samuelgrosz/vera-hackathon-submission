@@ -1,0 +1,12 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+.vera/
+emails/
+/dev/
+/screening/
+/datasets/
+/output/*
+!/output/dev.jsonl
+.DS_Store

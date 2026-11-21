@@ -1,0 +1,5 @@
+* text=auto eol=lf
+system/run text eol=lf
+*.docx binary
+vera.cmd text eol=crlf
+vera text eol=lf

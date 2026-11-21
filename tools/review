@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parents[1] / 'system'))  # engine lives in system/
+import argparse
+from dataclasses import replace
+from pathlib import Path
+
+from engine.s2_customers import Customer
+from engine.s3_hit_facts import build_hit, date_evidence
+from engine.s1_load import Dataset
+from engine.normalize import Names
+from engine.s4_decide import CLEAR, REVIEW, decide
+from engine.s5_batch import Batch
+
+
+def demo_evidence():
+    customer_dob = date_evidence(('1994-07-12',), ('KYC-DEMO',))
+    customer = Customer('CUS-DEMO', ('CUS-DEMO',), (), (), 'person', ('Alex Morgan',),
+                        ('Alex Morgan',), ('KYC-DEMO',), False, customer_dob,
+                        build_hit({'hit_id': 'CUS-DEMO', 'countries': ['GB']}, {}).geography)
+    hit = build_hit({'hit_id': 'HIT-DEMO', 'entity_type': 'Individual', 'name': 'Alex Morgan',
+                     'countries': ['GB'], 'categories': ['Sanctions']},
+                    {'alex morgan': [{'result_id': 'RESULT-DEMO',
+                      'snippet': 'Alex Morgan, born in 1961, was described as a sanctioned individual.'}]})
+    return 'ALERT-DEMO', (customer,), hit, date_evidence(('2026-01-10',), ('ALERT-DEMO',)), Names([], [])
+
+
+def render(alert_id, customers, hit, screened, names, previews):
+    decision = decide(customers, hit, screened, names, alert_id=alert_id)
+    print(f'Alert {alert_id} | Hit {hit.id}')
+    print(f'{decision.finding.decision} ({decision.finding.code})')
+    print(' '.join(decision.finding.sentences))
+    print('Source records ' + ', '.join(decision.finding.evidence))
+    if len(decision.candidates) > 1:
+        print('\nCustomer candidates')
+        for record_id, outcome in decision.candidates:
+            print(f'  {record_id} | {outcome.finding.decision} | ' + ' '.join(outcome.finding.sentences))
+    if decision.blockers:
+        print('\nWhat to check')
+        for obstacle, action in decision.blockers:
+            print(f'  {obstacle}. {action}.')
+    if decision.finding.decision == REVIEW and previews:
+        print('\nConditional outcomes')
+        for raw in previews:
+            if raw == 'unknown':
+                scenario = hit
+                assumption = 'Checking the original listing supplies no new usable birth date'
+            else:
+                proposed = date_evidence((raw,), ('HYPOTHETICAL-LISTING',))
+                if proposed.uncertain or not proposed.values:
+                    raise ValueError('preview dates must be valid dates or the word unknown')
+                assumption = f'The original listing establishes {raw} as its only birth date or year'
+                scenario = replace(hit, dob=proposed, problems=())
+            answer = decide(customers, scenario, screened, names, alert_id=alert_id)
+            print(f'  {assumption}. {answer.finding.decision}. ' + ' '.join(answer.finding.sentences))
+    return decision
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Explain a single hit and preview hypothetical listing evidence.')
+    parser.add_argument('data_folder', nargs='?', type=Path)
+    parser.add_argument('hit_id', nargs='?')
+    parser.add_argument('--format', choices=('jsonl', 'csv'))
+    parser.add_argument('--listing-dob', action='append', default=[])
+    parser.add_argument('--demo', action='store_true', help='Use a fictional case.')
+    options = parser.parse_args()
+    try:
+        if options.demo:
+            render(*demo_evidence(), options.listing_dob or ['1961', '1994-07-12', 'unknown'])
+        elif options.data_folder and options.hit_id:
+            dataset = Dataset(options.data_folder, options.format)
+            batch = Batch(dataset)
+            inputs = batch.evidence(options.hit_id)
+            result = render(*inputs, dataset.names, options.listing_dob)
+            alert_id = inputs[0]
+            other_hits = [hit_id for alert, hit_id in dataset.inventory if alert == alert_id and hit_id != options.hit_id]
+            other_outcomes = [batch.decision(hit_id).finding.decision for hit_id in other_hits]
+            open_hits = sum(outcome != CLEAR for outcome in [result.finding.decision, *other_outcomes])
+            print(f'\nAlert status: {"open" if open_hits else "cleared"} ({open_hits} of {len(other_hits) + 1} hits remain open)')
+        else:
+            parser.error('provide a data folder and hit ID, or use --demo')
+    except (OSError, ValueError, KeyError) as exc:
+        parser.exit(1, f'Review failed. {exc}\n')
+
+
+if __name__ == '__main__':
+    main()

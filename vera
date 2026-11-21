@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Launch Vera: ./vera [data folder]   (add this folder to PATH to type just `vera`)
+DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+PY="$(command -v python3 || command -v python)"
+export PYTHONIOENCODING=utf-8
+# Git Bash's mintty window can't pass single keypresses to Windows Python; winpty fixes that.
+if [ -n "${MSYSTEM:-}" ] && [ "${TERM_PROGRAM:-}" = "mintty" ] && command -v winpty >/dev/null 2>&1 && [ -t 0 ]; then
+  exec winpty "$PY" "$DIR/system/vera_cli.py" "$@"
+fi
+exec "$PY" "$DIR/system/vera_cli.py" "$@"
